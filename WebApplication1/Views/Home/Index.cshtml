@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Http;
+@model List<MaturitaPvaCviceniASP.Models.Note>;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+
+        @if(Context.Session.GetString("User") != null){
+
+            <div class="deleteUser">
+
+                <form action="/User/DeleteUser" method="post">
+                    <label for="username">username: </label>
+                    <input type="text" name="username" />
+                    <label for="password">password: </label>
+                    <input type="password" name="password" />
+                    <input type="submit" value="DELETE USER"/>
+                </form>
+
+            </div>
+
+            <form action="/Home/CreateNote" method="post">
+
+                <label for="title">Title: </label>
+                <input type="text" name="title"/>
+                <label for="description">Description: </label>
+                <textarea type="text" name="description"></textarea>
+                <input type="submit" value="ADD"/>
+
+            </form>
+
+            @if(Model != null && Model.Count > 0){
+                foreach(MaturitaPvaCviceniASP.Models.Note notes in Model){
+                    if(notes.Starred){
+                        <div class="notes starred">
+                            <p class="notes-title"><b>@notes.Title</b></p>
+                            <p class="notes-description">@notes.Description</p>
+                            <p>@notes.Date</p>
+                            <a href="@Url.Action("Highlight", "Home", new {noteId = notes.Id, starred = notes.Starred})" >Highlight</a>
+                            <a href="@Url.Action("DeleteNote", "Home", new {noteId = notes.Id})" >Delete</a>
+                        </div>
+                    }
+                }
+
+                foreach (MaturitaPvaCviceniASP.Models.Note notes in Model){
+                    if (!notes.Starred)
+                    {
+                        <div class="notes">
+                            <p class="notes-title"><b>@notes.Title</b></p>
+                            <p class="notes-description">@notes.Description</p>
+                            <p>@notes.Date</p>
+                            <a href="@Url.Action("Highlight", "Home", new {noteId = notes.Id, starred = notes.Starred})" >Highlight</a>
+                            <a href="@Url.Action("DeleteNote", "Home", new {noteId = notes.Id})" >Delete</a>
+                        </div>
+                    }
+                }
+            }
+        }
+</div>
